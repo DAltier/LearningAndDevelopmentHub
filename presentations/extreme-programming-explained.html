@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extreme Programming Explained</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    /* ---------- Acuity green theme for this deck (colours sampled from the logo files) ---------- */
+    :root {
+      --paper: #f1f6f1;
+      --surface: #fffefa;
+      --ink: #1d2a23;
+      --muted: #4c6357;
+      --line: #d3e2d8;
+      --accent: #00733b;
+      --accent-ink: #ffffff;
+      --accent-soft: #dcebdf;
+      --xp-deep: #004e32;   /* headings on light backgrounds */
+      --xp-mid: #00733b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --paper: #0e1f17; --surface: #16291f; --ink: #eaf3ec; --muted: #a3bdae; --line: #2a4335;
+        --accent: #5bc98a; --accent-ink: #06281a; --accent-soft: #1e3a2b;
+        --xp-deep: #8eddb0; --xp-mid: #5bc98a;
+      }
+    }
+    :root[data-theme="dark"] {
+      --paper: #0e1f17; --surface: #16291f; --ink: #eaf3ec; --muted: #a3bdae; --line: #2a4335;
+      --accent: #5bc98a; --accent-ink: #06281a; --accent-soft: #1e3a2b;
+      --xp-deep: #8eddb0; --xp-mid: #5bc98a;
+    }
+
+    .deck h1, .deck h2, .deck h3, dialog.popup h3 { font-family: var(--sans); font-weight: 700; }
+    /* PowerPoint-style scaling: the slide is designed at 1920 x 1080 and every size below is in em,
+       so tying 1em to the window (width or height, whichever is tighter) scales the whole slide
+       to fit without scrolling. Phones (under 700px wide) fall back to a scrolling layout. */
+    .slide {
+      font-size: min(1.29vw, calc((100vh - var(--bar-h)) * 0.0241));
+      font-size: min(1.29vw, calc((100dvh - var(--bar-h)) * 0.0241));
+      padding: 2.9em 3.9em;
+    }
+    .slide > * { max-width: none; }
+    .slide h2 { color: var(--xp-deep); font-size: 1.87em; }
+    .lede { font-size: 1.3em; line-height: 1.4; }
+
+    /* ---------- Running header (every slide after the cover) ---------- */
+    .slide.has-header { justify-content: flex-start; padding-top: 5.3em; }
+    .slide > .xp-header {
+      position: absolute; top: 0; left: 0; right: 0;
+      max-width: none; margin: 0;
+      display: flex; align-items: center; gap: 0.7em;
+      padding: 0.7em 5em;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.78em; color: var(--muted);
+    }
+    .xp-header img { width: 2em; height: 2em; flex: none; }
+    .xp-header b { color: var(--xp-deep); }
+
+    /* ---------- Cover ---------- */
+    .slide.xp-cover { padding: 0; }
+    .slide.xp-cover.active { display: grid; grid-template-columns: 44% 1fr; grid-template-rows: minmax(100%, auto); }
+    .slide.xp-cover > * { max-width: none; margin: 0; width: auto; min-width: 0; }
+    .xp-left, .xp-right { display: flex; flex-direction: column; justify-content: center; padding: 2.6em; }
+    .xp-left { flex: 0 0 44%; gap: 2.2em; background: #004e32; color: #f5f9f5; }
+    .xp-right { flex: 1; gap: 0.7em; }
+
+    .xp-book { display: flex; align-items: center; gap: 1.4em; }
+    .xp-book img { width: 12.1em; height: auto; flex: none; border-radius: 6px; box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45); }
+    .xp-book h2 { color: #f5f9f5; font-size: 1.55em; margin-bottom: 0.4em; }
+    .xp-book p { margin: 0 0 0.5em; color: #cfe3d6; font-size: 0.95em; line-height: 1.35; }
+    .xp-book p + p { color: #a9c9b6; }
+
+    .xp-hook p { margin: 0; }
+    .xp-hook .lead { font-size: 1.6em; font-weight: 500; line-height: 1.2; }
+    .slide .xp-hook h1 { color: #8eddb0; font-weight: 800; font-size: 3.5em; margin: 0.08em 0 0.22em; white-space: nowrap; }
+    .xp-hook .sub { font-size: 1.08em; line-height: 1.4; color: #cfe3d6; }
+
+    .xp-right-head { display: flex; align-items: center; justify-content: space-between; gap: 1em; margin-bottom: 0.4em; }
+    .slide .xp-right-head h2 { font-size: 1.65em; margin: 0; }
+    .xp-right-head img { width: 4.4em; height: 4.4em; flex: none; }
+
+    .xp-value { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .xp-value .tile { flex: 0 0 6.2em; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: 700; color: #fffefa; }
+    .xp-value .tile.t1 { background: #00733b; }
+    .xp-value .tile.t2 { background: #3c9e68; }
+    .xp-value .tile.t3 { background: #004e32; }
+    .xp-value .body { flex: 1; min-width: 0; padding: 0.8em 1.1em; font-size: 0.9em; line-height: 1.4; }
+    .xp-value .body p { margin: 0 0 0.3em; }
+    .xp-value .body p:last-child { margin: 0; }
+    .xp-value .tagline { font-weight: 700; color: var(--xp-deep); }
+    .xp-value .practices { font-weight: 600; color: var(--xp-mid); }
+
+    /* ---------- "What is XP?" ---------- */
+    .xp-cards { flex: 1 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1em; margin-bottom: 1.2em; }
+    .xp-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .slide .xp-card h3 { margin: 0; padding: 0.6em 0.9em; font-size: 1.5em; color: #fffefa; background: #004e32; }
+    .xp-card:nth-child(even) h3 { background: #00733b; }
+    .xp-card .body { padding: 1.1em 1.3em; font-size: 1.05em; line-height: 1.45; }
+    .xp-card .body p { margin: 0 0 0.8em; }
+    .xp-card .body p:last-child { margin: 0; }
+    .xp-card .em { font-weight: 600; color: var(--xp-mid); }
+    .xp-band { display: flex; align-items: center; gap: 1.4em; background: #004e32; color: #f5f9f5; border-radius: 16px; padding: 1.1em 1.5em; font-size: 1.1em; }
+    .xp-band .kicker { color: #8eddb0; margin: 0; white-space: nowrap; }
+    .xp-band p { margin: 0; }
+
+    /* ---------- Values ---------- */
+    .xp-values { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8em; margin-top: 0.4em; }
+    .xp-val { background: var(--surface); border: 1px solid var(--line); border-top: 8px solid var(--xp-mid); border-radius: 16px; padding: 1.4em 1.2em 1.5em; min-height: 15em; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5em; }
+    .xp-val .n { font-size: 0.8em; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .slide .xp-val h3 { font-size: 1.4em; margin: 0 0 0.6em; color: var(--xp-deep); }
+    .xp-val .more { margin-top: auto; }
+    .xp-tip { font-size: 0.78em; margin-bottom: 2.6em; color: var(--muted); }
+    .xp-others { display: flex; align-items: baseline; gap: 1.2em; margin-top: 2.2em; padding-top: 1.1em; border-top: 1px solid var(--line); }
+    .xp-others .kicker { margin: 0; white-space: nowrap; }
+    .xp-others p { margin: 0; }
+
+    @media (max-width: 700px) {
+      .slide { font-size: 1rem; padding: 1.5em 1em; }
+      .slide.has-header { padding-top: 4.6em; }
+      .slide > .xp-header { padding: 0.7em 1.3em; }
+      .slide.xp-cover { padding: 0; }
+      .xp-left, .xp-right { padding: 1.5em 1em; }
+      .xp-book img { width: 8em; }
+      .slide .xp-hook h1 { font-size: 2.6em; }
+      .slide.xp-cover.active { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .xp-cards { grid-template-columns: repeat(2, 1fr); }
+      .xp-values { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+      .xp-band { flex-direction: column; align-items: flex-start; gap: 0.4em; }
+    }
+    @media (max-width: 560px) {
+      .xp-value { flex-direction: column; }
+      .xp-value .tile { flex: none; padding: 0.3em 0; }
+      .xp-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="deck-page">
+<main class="deck">
+
+  <!-- 1. Cover: the hook and the link to Better. Smarter. Faster. -->
+  <section class="slide xp-cover" data-title="We don’t practice Extreme Programming … or do we?">
+    <div class="xp-left">
+      <div class="xp-book">
+        <img src="../assets/xp-cover.jpg" alt="Cover of Extreme Programming Explained: Embrace Change, Second Edition, by Kent Beck with Cynthia Andres">
+        <div>
+          <h2>Extreme Programming Explained</h2>
+          <p>Embrace Change<br>Second Edition</p>
+          <p>Kent Beck<br>with Cynthia Andres</p>
+        </div>
+      </div>
+      <div class="xp-hook">
+        <p class="lead">We don’t practice Extreme Programming …</p>
+        <h1>or do we?</h1>
+        <p class="sub">Continuous integration, automated tests, user stories: we already use ideas XP made mainstream in the late 1990s. Here is what we gain by using them on purpose.</p>
+      </div>
+    </div>
+    <div class="xp-right">
+      <div class="xp-right-head">
+        <h2>Our values,<br>the XP way</h2>
+        <img src="../assets/acuity-logo.png" alt="Acuity logo">
+      </div>
+      <div class="xp-value">
+        <div class="tile t1">Better.</div>
+        <div class="body">
+          <p class="tagline">Quality is built in from the first line</p>
+          <p>Cutting quality never buys speed. Test first, improve the design a little every day, and the code stays safe to change.</p>
+          <p class="practices">Test-First Programming · Incremental Design</p>
+        </div>
+      </div>
+      <div class="xp-value">
+        <div class="tile t2">Smarter.</div>
+        <div class="body">
+          <p class="tagline">Guardrails for the AI era</p>
+          <p>AI writes code faster than we can review it. Tests written first prove it works, and pairing puts a second mind on hard decisions.</p>
+          <p class="practices">Pair Programming · Whole Team · Stories</p>
+        </div>
+      </div>
+      <div class="xp-value">
+        <div class="tile t3">Faster.</div>
+        <div class="body">
+          <p class="tagline">Short feedback loops</p>
+          <p>Find mistakes in minutes, not weeks: integrate every couple of hours, keep the build under ten minutes, ship something every week.</p>
+          <p class="practices">Continuous Integration · Ten-Minute Build</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Open with the question: we don’t practice Extreme Programming … or do we? Then walk the three values. Better: Beck argues quality is not a dial you turn down to go faster; test-first programming and incremental design keep the code safe to change. Smarter: with AI writing code quickly, tests are how we know it is right, and pairing, the whole team and small stories keep us building the right thing. Faster: continuous integration, the ten-minute build and the weekly cycle shorten the loop between a mistake and finding it. The green line on each row names the XP practices from the book.</aside>
+  </section>
+
+  <!-- 2. What is XP? -->
+  <section class="slide has-header" data-title="What is XP?">
+    <header class="xp-header">
+      <img src="../assets/acuity-logo.png" alt="Acuity logo">
+      <span><b>Extreme Programming Explained</b> · Kent Beck with Cynthia Andres</span>
+    </header>
+    <h2>What is XP?</h2>
+    <p class="lede">XP is a style of software development that focuses on the excellent application of programming techniques, clear communication, and teamwork.</p>
+    <div class="kicker">XP includes</div>
+    <div class="xp-cards">
+      <div class="xp-card">
+        <h3>Values</h3>
+        <div class="body">
+          <p>A philosophy of software development based on five values.</p>
+          <p class="em">Communication · Feedback · Simplicity · Courage · Respect</p>
+        </div>
+      </div>
+      <div class="xp-card">
+        <h3>Practices</h3>
+        <div class="body">
+          <p>A body of practices proven useful in improving software development.</p>
+          <p class="em">They complement each other and express the values.</p>
+        </div>
+      </div>
+      <div class="xp-card">
+        <h3>Principles</h3>
+        <div class="body">
+          <p>Intellectual techniques for translating the values into practice.</p>
+          <p class="em">For when no practice fits your particular problem.</p>
+        </div>
+      </div>
+      <div class="xp-card">
+        <h3>Community</h3>
+        <div class="body">
+          <p>People who share these values and many of the same practices.</p>
+        </div>
+      </div>
+    </div>
+    <div class="xp-band">
+      <div class="kicker">Who it is for</div>
+      <p>A lightweight methodology for small-to-medium-sized teams developing software in the face of vague or rapidly changing requirements.</p>
+    </div>
+    <aside class="notes">XP has four parts: values, practices, principles and a community. The values are what we care about, the practices are what we do day to day, and the principles bridge the two when no practice fits. Beck also describes XP in more personal terms: giving up old, ineffective technical and social habits in favor of new ones that work; fully appreciating yourself for total effort today; striving to do better tomorrow; evaluating yourself by your contribution to the team’s shared goals; and asking to get some of your human needs met through software development.</aside>
+  </section>
+
+  <!-- 3. Values: one card per value, each with a pop-up -->
+  <section class="slide has-header" data-title="Values">
+    <header class="xp-header">
+      <img src="../assets/acuity-logo.png" alt="Acuity logo">
+      <span><b>Extreme Programming Explained</b> · Kent Beck with Cynthia Andres</span>
+    </header>
+    <h2>Values</h2>
+    <p class="lede">XP embraces five values to guide development: communication, simplicity, feedback, courage, and respect.</p>
+    <p class="xp-tip"><span>Select <b>+ Learn more</b> on any value to open the details.</span></p>
+    <div class="xp-values">
+      <div class="xp-val">
+        <span class="n">01</span>
+        <h3>Communication</h3>
+        <button class="more" data-popup="val-communication" aria-label="Learn more about Communication">Learn more</button>
+      </div>
+      <div class="xp-val">
+        <span class="n">02</span>
+        <h3>Simplicity</h3>
+        <button class="more" data-popup="val-simplicity" aria-label="Learn more about Simplicity">Learn more</button>
+      </div>
+      <div class="xp-val">
+        <span class="n">03</span>
+        <h3>Feedback</h3>
+        <button class="more" data-popup="val-feedback" aria-label="Learn more about Feedback">Learn more</button>
+      </div>
+      <div class="xp-val">
+        <span class="n">04</span>
+        <h3>Courage</h3>
+        <button class="more" data-popup="val-courage" aria-label="Learn more about Courage">Learn more</button>
+      </div>
+      <div class="xp-val">
+        <span class="n">05</span>
+        <h3>Respect</h3>
+        <button class="more" data-popup="val-respect" aria-label="Learn more about Respect">Learn more</button>
+      </div>
+    </div>
+    <div class="xp-others">
+      <div class="kicker">Others</div>
+      <p>Other important values include safety, security, predictability, and quality-of-life.</p>
+    </div>
+
+    <!-- Pop-up content for each value -->
+    <template id="val-communication">
+      <h3>Communication</h3>
+      <p><b>What matters most in team software development is communication.</b></p>
+      <ul>
+        <li><b>It is not behind every problem.</b> Sometimes a problem is caused by a lack of knowledge rather than a lack of communication.</li>
+        <li><b>It is how problems get solved.</b> Once you find a surprising problem, communication can help you solve it.</li>
+        <li><b>It builds the team.</b> Communication is important for creating a sense of team and effective cooperation.</li>
+      </ul>
+      <p class="muted">XP practices that build it: Sit Together · Whole Team · Pair Programming · Informative Workspace</p>
+    </template>
+    <template id="val-simplicity">
+      <h3>Simplicity</h3>
+      <p><b>Simplicity is the most intensely intellectual of the XP values.</b></p>
+      <ul>
+        <li><b>It is hard work.</b> Making a system simple enough to gracefully solve only today’s problem takes real effort.</li>
+        <li><b>It depends on context.</b> Simplicity only makes sense in context.</li>
+        <li><b>It works with communication.</b> Better communication removes unneeded or deferrable requirements from today’s concerns, and a simpler system gives you that much less to communicate about.</li>
+      </ul>
+      <p class="muted">XP practices that build it: Incremental Design · Stories</p>
+    </template>
+    <template id="val-feedback">
+      <h3>Feedback</h3>
+      <p><b>Change is inevitable, but change creates the need for feedback.</b></p>
+      <ul>
+        <li><b>It favours improvement over perfection.</b> We use feedback to get closer to our goals rather than expecting instant perfection.</li>
+        <li><b>It should be fast.</b> XP teams generate as much feedback as they can handle, as quickly as possible. The sooner you know, the sooner you can adapt.</li>
+        <li><b>It works with the other values.</b> Feedback is a critical part of communication, and the simpler the system, the easier it is to get feedback about it.</li>
+      </ul>
+      <p class="muted">XP practices that build it: Test-First Programming · Continuous Integration · Weekly Cycle</p>
+    </template>
+    <template id="val-courage">
+      <h3>Courage</h3>
+      <p><b>Courage is effective action in the face of fear.</b></p>
+      <ul>
+        <li><b>It can mean acting.</b> If you know what the problem is, do something about it.</li>
+        <li><b>It can mean waiting.</b> If you know there is a problem but not what it is, it takes courage to wait for the real problem to emerge distinctly.</li>
+        <li><b>It works with the other values.</b> Courage alone is dangerous. Speaking truths, pleasant or unpleasant, fosters communication and trust; discarding failing solutions encourages simplicity; seeking real, concrete answers creates feedback.</li>
+      </ul>
+      <p class="muted">XP practices that build it: Test-First Programming · Incremental Design · Pair Programming</p>
+    </template>
+    <template id="val-respect">
+      <h3>Respect</h3>
+      <p><b>Respect lies below the surface of the other four values.</b></p>
+      <ul>
+        <li><b>It means caring about each other.</b> If members of a team don’t care about each other and what they are doing, XP won’t work.</li>
+        <li><b>It means caring about the work.</b> If members of a team don’t care about a project, nothing can save it.</li>
+        <li><b>It works with the other values.</b> Communication, simplicity, feedback and courage all point to respect.</li>
+      </ul>
+      <p class="muted">XP practices that build it: Whole Team · Sit Together · Energized Work</p>
+    </template>
+  </section>
+
+</main>
+<script src="../assets/deck.js"></script>
+</body>
+</html>

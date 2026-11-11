@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How this hub works</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body class="deck-page">
+<main class="deck">
+
+  <!-- 1. Title -->
+  <section class="slide title">
+    <div class="kicker">Demo deck</div>
+    <h1>How this hub works</h1>
+    <p class="lede">Every interactive element you can use in a book deck, one per slide.</p>
+    <p class="hint">Press <kbd>&rarr;</kbd> or <kbd>Space</kbd> to continue &middot; <kbd>O</kbd> for all slides</p>
+    <aside class="notes">Notes like this one are private to each slide. Press N to show or hide them.</aside>
+  </section>
+
+  <!-- 2. Step reveal -->
+  <section class="slide">
+    <div class="kicker">Step reveal</div>
+    <h2>One idea at a time</h2>
+    <p>Add <code>class="step"</code> to anything and it waits for the next key press.</p>
+    <ul>
+      <li class="step">Good for walking through an argument in the order the author builds it.</li>
+      <li class="step">Good for a question first, answer second.</li>
+      <li class="step">Going back with <kbd>&larr;</kbd> hides steps again, one by one.</li>
+    </ul>
+  </section>
+
+  <!-- 3. Pop-ups and term tooltips -->
+  <section class="slide">
+    <div class="kicker">Pop-ups &amp; definitions</div>
+    <h2>Keep the slide short, put the depth behind a click</h2>
+    <blockquote class="quote">
+      A highlight goes on the slide. The page of context around it goes in a pop-up.
+      <cite>Your book, chapter 3</cite>
+    </blockquote>
+    <p>
+      <button class="more" data-popup="pop-context">Context for this quote</button>
+    </p>
+    <p>
+      Any phrase can be a trigger too, like <span data-popup="pop-example">this highlighted one</span>.
+      For a quick definition, hover or tap a
+      <span class="term" data-def="A short definition shown on hover, focus or tap. Best for jargon and acronyms.">term</span>
+      instead.
+    </p>
+
+    <template id="pop-context">
+      <h3>Context for this quote</h3>
+      <p>Pop-up content lives in a <code>&lt;template&gt;</code> next to the slide. It can hold anything: paragraphs, lists, images, a longer excerpt, a link to the source.</p>
+      <ul>
+        <li>Where in the book it appears</li>
+        <li>Why you highlighted it</li>
+        <li>A counter-argument or caveat</li>
+      </ul>
+      <p class="muted">Close with Esc, the &times; button, or a click outside.</p>
+    </template>
+    <template id="pop-example">
+      <h3>Inline triggers</h3>
+      <p>Add <code>data-popup="some-id"</code> to any element and it opens the template with that id.</p>
+    </template>
+  </section>
+
+  <!-- 4. Flip cards -->
+  <section class="slide">
+    <div class="kicker">Flip cards</div>
+    <h2>Concept on the front, explanation on the back</h2>
+    <div class="cards">
+      <button class="flip">
+        <span class="flip-front">Key concept</span>
+        <span class="flip-back">The author's definition in one or two sentences, in your own words.</span>
+      </button>
+      <button class="flip">
+        <span class="flip-front">A question the book asks</span>
+        <span class="flip-back">Try to answer before flipping. Recalling an answer sticks better than re-reading it.</span>
+      </button>
+      <button class="flip">
+        <span class="flip-front">A common mistake</span>
+        <span class="flip-back">What the book recommends doing instead.</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 5. Tabs -->
+  <section class="slide">
+    <div class="kicker">Tabs</div>
+    <h2>Same idea, three angles</h2>
+    <div class="tabs">
+      <section data-tab="The book says">
+        <p>Summarise the author's position here. Tabs suit comparisons: before / after, option A / option B, theory / practice.</p>
+      </section>
+      <section data-tab="My take">
+        <p>Where you agree, where you don't, and what you would add from your own experience.</p>
+      </section>
+      <section data-tab="At work">
+        <p>One concrete situation on your team where this applies, and what you would do differently.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- 6. Go deeper -->
+  <section class="slide">
+    <div class="kicker">Go deeper</div>
+    <h2>Optional detail that stays out of the way</h2>
+    <details class="deeper">
+      <summary>The evidence behind the claim</summary>
+      <p>Studies, numbers or the case the author uses. Collapsed by default so the slide stays readable when presenting.</p>
+    </details>
+    <details class="deeper">
+      <summary>A worked example</summary>
+      <p>Code, a calculation, or a step-by-step walk through the technique.</p>
+    </details>
+    <details class="deeper">
+      <summary>Related books</summary>
+      <p>Links to other decks in the library that cover the same ground.</p>
+    </details>
+  </section>
+
+  <!-- 7. Quiz -->
+  <section class="slide">
+    <div class="kicker">Self-check</div>
+    <h2>Test the takeaway</h2>
+    <div class="quiz">
+      <p class="quiz-q">Where does the long explanation of a highlight belong?</p>
+      <button class="opt">On the slide, in a smaller font</button>
+      <button class="opt" data-correct>In a pop-up or a "go deeper" section</button>
+      <button class="opt">Nowhere, leave it out</button>
+      <p class="quiz-why">Slides carry the headline; the detail stays one click away for whoever wants it.</p>
+    </div>
+  </section>
+
+  <!-- 8. Actions -->
+  <section class="slide">
+    <div class="kicker">Action checklist</div>
+    <h2>What I will actually do</h2>
+    <p>Ticks are remembered in this browser, so the deck doubles as a follow-up list.</p>
+    <ul class="actions" data-key="next-steps">
+      <li>Copy <code>presentations/_template.html</code> for my first book</li>
+      <li>Add the book to <code>assets/books.js</code> so it shows in the library</li>
+      <li>Pick the three highlights worth a slide each</li>
+    </ul>
+  </section>
+
+  <!-- 9. Wrap-up -->
+  <section class="slide">
+    <div class="kicker">Reference</div>
+    <h2>Shortcuts</h2>
+    <div class="cols">
+      <ul>
+        <li><kbd>&rarr;</kbd> <kbd>Space</kbd> next step or slide</li>
+        <li><kbd>&larr;</kbd> back</li>
+        <li><kbd>Home</kbd> / <kbd>End</kbd> first / last slide</li>
+        <li>Swipe left or right on a touch screen</li>
+      </ul>
+      <ul>
+        <li><kbd>O</kbd> all slides</li>
+        <li><kbd>N</kbd> my notes</li>
+        <li><kbd>T</kbd> light / dark</li>
+        <li><kbd>F</kbd> full screen &middot; <kbd>Ctrl</kbd>+<kbd>P</kbd> prints to PDF</li>
+      </ul>
+    </div>
+    <aside class="notes">The address bar tracks the slide number (#9 here), so you can link a colleague straight to one slide.</aside>
+  </section>
+
+</main>
+<script src="../assets/deck.js"></script>
+</body>
+</html>
